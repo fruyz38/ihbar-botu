@@ -1,8 +1,24 @@
 import discord
 from discord.ext import commands
 import os
+from flask import Flask
+from threading import Thread
 
-# Gerekli ayarlar
+# Web sunucusunu başlat (Render'ın port hatasını engellemek için)
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot aktif!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+# Bot ayarları
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -41,5 +57,6 @@ async def on_ready():
 async def ihbarpanel(ctx):
     await ctx.send("Aşağıdaki butona basarak ihbar oluştur:", view=IhbarButon())
 
-# TOKEN KISMI BURADA, SAKIN BURAYA TOKEN YAZMA!
+# Önce web sunucusunu çalıştır, sonra botu başlat
+keep_alive()
 bot.run(os.environ['TOKEN'])
