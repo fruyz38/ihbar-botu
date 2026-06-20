@@ -57,7 +57,21 @@ async def on_ready():
 
 @bot.command()
 async def ihbarpanel(ctx):
-    await ctx.send("Aşağıdaki butona basarak ihbar oluştur:", view=IhbarButon())
+    # Embed mesajını oluşturuyoruz
+    embed = discord.Embed(
+        title="🚨 Zynex İhbar Sistemine Hoşgeldin!",
+        description="Bu sistem üzerinden güvenli ve anonim şekilde ihbar gönderebilirsiniz.",
+        color=discord.Color.red()
+    )
+    
+    embed.add_field(name="🔒 GİZLİLİK GARANTİSİ:", value="• İhbarlar anonimdir ve veriler gizli tutulur.", inline=False)
+    embed.add_field(name="⚡ SİSTEM GÜVENCESİ:", value="• İhbarlar otomatik olarak EGM'ye iletilir.", inline=False)
+    
+    # Alt kısım (footer)
+    embed.set_footer(text="fruyz ihbar sistemi / otomatik apı entegrasyonu")
+    
+    # Mesajı gönder
+    await ctx.send(embed=embed, view=IhbarButon())
 
 # Önce web sunucusunu çalıştır, sonra botu başlat
 keep_alive()
