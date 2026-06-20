@@ -3,6 +3,7 @@ from discord.ext import commands
 import os
 from flask import Flask
 from threading import Thread
+import time
 
 # Web sunucusu
 app = Flask('')
@@ -34,7 +35,6 @@ class IhbarButon(discord.ui.View):
 
     @discord.ui.button(label="İhbar Et", style=discord.ButtonStyle.danger, custom_id="ihbar_butonu_benzersiz_id")
     async def ihbar_et(self, interaction: discord.Interaction, button: discord.ui.Button):
-        # En stabil yöntem: Doğrudan modalı gönder
         await interaction.response.send_modal(IhbarModal())
 
 class MyBot(commands.Bot):
@@ -63,5 +63,13 @@ async def ihbarpanel(ctx):
     
     await ctx.send(embed=embed, view=IhbarButon())
 
+# Web sunucusunu başlat
 keep_alive()
-bot.run(os.environ['TOKEN'])
+
+# Hata durumunda yeniden başlatan döngü
+while True:
+    try:
+        bot.run(os.environ['TOKEN'])
+    except Exception as e:
+        print(f"Bot hata aldı, 5 saniye sonra yeniden başlıyor: {e}")
+        time.sleep(5)
