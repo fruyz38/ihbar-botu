@@ -35,9 +35,11 @@ class IhbarButon(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @discord.ui.button(label="İhbar Et", style=discord.ButtonStyle.danger, custom_id="ihbar_butonu_yeni")
+    @discord.ui.button(label="İhbar Et", style=discord.ButtonStyle.danger, custom_id="ihbar_butonu_benzersiz_id")
     async def ihbar_et(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_modal(IhbarModal())
+        # 404 hatasını önlemek için defer ve followup kullanımı
+        await interaction.response.defer(ephemeral=True)
+        await interaction.followup.send_modal(IhbarModal())
 
 class MyBot(commands.Bot):
     def __init__(self):
