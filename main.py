@@ -16,9 +16,9 @@ class IhbarModal(discord.ui.Modal, title='Yeni İhbar Oluştur'):
 
 class IhbarButon(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
+        super().__init__(timeout=None) # Botun sürekli açık kalması için gerekli
 
-    @discord.ui.button(label="İhbar Et", style=discord.ButtonStyle.danger)
+    @discord.ui.button(label="İhbar Et", style=discord.ButtonStyle.danger, custom_id="ihbar_butonu_id")
     async def ihbar_et(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(IhbarModal())
 
@@ -27,6 +27,7 @@ class MyBot(commands.Bot):
         super().__init__(command_prefix="!", intents=intents)
 
     async def setup_hook(self):
+        # Bot başladığında butonu aktif et
         self.add_view(IhbarButon())
 
 bot = MyBot()
@@ -40,5 +41,4 @@ async def on_ready():
 async def ihbarpanel(ctx):
     await ctx.send("Aşağıdaki butona basarak ihbar oluştur:", view=IhbarButon())
 
-# Token artık kodda yazmıyor, Render'ın güvenli kasasından çekiliyor!
 bot.run(os.environ['TOKEN'])
