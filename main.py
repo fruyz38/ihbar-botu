@@ -1,12 +1,9 @@
 import discord
 from discord.ext import commands
+import os
 
-# BOT TOKENINI BURAYA YAZ
-TOKEN = 'MTUxNzk2Mjg2OTYwODY4MTU4Mw.GhgRC9.4sfcsR7mh8Ur1A9HbXuCqExo-EvpGeNX2D-yj0'
-
-# İzinleri (intents) tanımlıyoruz
 intents = discord.Intents.default()
-intents.message_content = True 
+intents.message_content = True
 
 class IhbarModal(discord.ui.Modal, title='Yeni İhbar Oluştur'):
     ad_soyad = discord.ui.TextInput(label='Ad Soyad / Rumuz', placeholder='Şüphelinin adı...')
@@ -15,15 +12,14 @@ class IhbarModal(discord.ui.Modal, title='Yeni İhbar Oluştur'):
     detay = discord.ui.TextInput(label='Olay Detayı', style=discord.TextStyle.paragraph)
 
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.user.send(f"🚨 **Yeni İhbar:**\nİsim: {self.ad_soyad}\nTür: {self.ihbar_turu}\nKonum: {self.konum}\nDetay: {self.detay}")
-        await interaction.response.send_message("İhbarın iletildi.", ephemeral=True)
+        await interaction.response.send_message('İhbarın iletildi.', ephemeral=True)
 
 class IhbarButon(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None) # Timeout'u None yaptık
+        super().__init__(timeout=None)
 
-    @discord.ui.button(label="🚨 İhbar Oluştur", style=discord.ButtonStyle.primary, custom_id="ihbar_btn_1")
-    async def ihbar_buton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @discord.ui.button(label="İhbar Et", style=discord.ButtonStyle.danger)
+    async def ihbar_et(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(IhbarModal())
 
 class MyBot(commands.Bot):
@@ -44,4 +40,5 @@ async def on_ready():
 async def ihbarpanel(ctx):
     await ctx.send("Aşağıdaki butona basarak ihbar oluştur:", view=IhbarButon())
 
-bot.run(TOKEN)
+# Token artık kodda yazmıyor, Render'ın güvenli kasasından çekiliyor!
+bot.run(os.environ['TOKEN'])
